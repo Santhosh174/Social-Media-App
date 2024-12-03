@@ -8,7 +8,8 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const path = require('path')
 const { fileURLToPath } = require('url')
-const { register } = require('./controllers/auth')
+const controller = require('./controllers/auth')
+const authRoutes = require('./routes/authRoutes')
 
 dotenv.config()
 const app = express()
@@ -31,6 +32,10 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({storage})
+
+//routes files
+app.post('/auth/register',upload.single("picture"),controller.register)
+app.use('/auth',authRoutes)
 
 //DB setup//
 const port = process.env.PORT
