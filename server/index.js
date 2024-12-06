@@ -10,6 +10,8 @@ const path = require('path')
 const { fileURLToPath } = require('url')
 const controller = require('./controllers/auth')
 const authRoutes = require('./routes/authRoutes')
+const userRoutes = require('./routes/user.js')
+const { verifyToken } = require('./middleware/authMiddle')
 
 dotenv.config()
 const app = express()
@@ -34,8 +36,9 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 //routes files
-app.post('/auth/register',upload.single("picture"),controller.register)
+app.post('/auth/register',upload.single("picture"),verifyToken,controller.register)
 app.use('/auth',authRoutes)
+app.use('/users',userRoutes)
 
 //DB setup//
 const port = process.env.PORT
